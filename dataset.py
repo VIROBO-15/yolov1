@@ -32,10 +32,16 @@ class VOC(Dataset):
 
         return image, label, filename
 
-dir = '2007_train.txt'
-V = VOC(dir, 256, 256)
-i, l, file = V.__getitem__(5)
+#dir = '2007_train.txt'
+#V = VOC(dir, 256, 256)
+#i, l, file = V.__getitem__(5)
 
+def get_dataloader(opt):
+
+    trainset = VOC(txt_file = opt.root_dir, img_width=opt.img_width, img_height=opt.img_height)
+    dataloader_train = DataLoader(trainset, batch_size=opt.batchSize, shuffle=True, num_workers=opt.workers, drop_last=False)
+
+    return dataloader_train
 
 
 
