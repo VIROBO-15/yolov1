@@ -22,7 +22,7 @@ class Model(nn.Module):
 
         loss.backward()
         self.optimizer.step()
-        return loss
+        return loss.item()
 
 
 
