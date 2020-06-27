@@ -15,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument('--B', default=2, help='Bounding_boxes')
     parser.add_argument('--img_width', default=448, help='Width of the image')
     parser.add_argument('--img_height', default=448, help='Height of the image')
-    parser.add_argument('--batchSize', type=int, default=20, help='input batch size')
+    parser.add_argument('--batchSize', type=int, default=2, help='input batch size')
     parser.add_argument('--niter', type=int, default=50, help='number of epochs to train for')
     parser.add_argument('--lr', type=float, default=0.0001)
     parser.add_argument('--cuda', default='cuda', help='enables cuda')
@@ -23,9 +23,7 @@ if __name__ == "__main__":
     parser.add_argument('--beta1', type=float, default=0.5, help='beta1 for adam. default=0.5')
     parser.add_argument('--beta2', type=float, default=0.5, help='beta2 for adam. default=0.5')
     parser.add_argument('--print_freq_iter', type=int, default=10)
-    parser.add_argument('--niter_decay', type=int, default=100,help='# of iter to linearly decay learning rate to zero')
-    parser.add_argument('--output_nc', type=int, default=3, help='# of output image channels')
-    parser.add_argument('--label_nc', type=int, default=3, help='Number of channels in the images')
+
 
     opt = parser.parse_args()
     train_loader = get_dataloader(opt)
@@ -45,13 +43,14 @@ if __name__ == "__main__":
 
 
 
-
+    """
     X = torch.randn(20, 3, 448, 448)  # image batch (random)
     Y = torch.clamp(torch.randn(20, 7, 7, 5), 0, 1)
     out = model(X)
     out, Y = out.to(device), Y.to(device)
     total_loss = calc_loss(out, Y, opt)
     print('a')
+    """
 
 
 
