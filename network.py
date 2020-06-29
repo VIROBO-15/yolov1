@@ -21,7 +21,7 @@ def expand_cfg(cfg):
             cfg_expanded.append(v)
     return cfg_expanded
 
-
+"""
 def make_layers(cfg):
 
     layers = []
@@ -43,6 +43,30 @@ def make_layers(cfg):
             layers += [nn.LeakyReLU(0.1)]   # Leaky rectified linear activation
             in_channels = v[1]
     return nn.Sequential(*layers)
+"""
+
+def make_layers(cfg):
+
+    layers = []
+    in_channels = 3
+    for v in cfg:
+        pad = 1 if v[0] == 3 else 0
+        if v == 'M':  # Max pool
+            layers += [nn.MaxPool2d(kernel_size=2, stride=2)]
+        elif isinstance(v, tuple):
+            if len(v) == 3:
+                # Conv (kernel_size, out_channels, stride)
+                layers += [nn.Conv2d(in_channels, out_channels=v[1], kernel_size=v[0], stride=2, padding=pad)]
+            else:
+                # Conv (kernel_size, out_channels)
+                layers += [nn.Conv2d(in_channels, out_channels=v[1], kernel_size=v[0], stride=2, padding=pad)]
+                layers += [nn.BatchNorm2d(num_features=v[1])]  # BN
+                #print('[new] BN is added.')
+
+            layers += [nn.LeakyReLU(0.1)]   # Leaky rectified linear activation
+            in_channels = v[1]
+    return nn.Sequential(*layers)
+
 
 class Darknet(nn.Module):
 
@@ -51,16 +75,16 @@ class Darknet(nn.Module):
         cfg = [
             (7, 64, 2), 'M',  # 1
             (3, 192), 'M',  # 2
-            (1, 128), (3, 256), (1, 256), (3, 512), 'M',  # 3
-            [(1, 256), (3, 512), 4], (1, 512), (3, 1024), 'M',  # 4
-            [(1, 512), (3, 1024), 2], (3, 1024), (3, 1024, 2),  # 5
-            (3, 1024), (3, 1024)  # 6
+            (1, 128), (3, 256), (1, 256)#, (3, 512), 'M',  # 3
+            #[(1, 256), (3, 512), 4], (1, 512), (3, 1024), 'M',  # 4
+            #[(1, 512), (3, 1024), 2], (3, 1024), (3, 1024, 2),  # 5
+            #(3, 1024), (3, 1024)  # 6
         ]
         self.opt = opt
         cfg = expand_cfg(cfg)
         self.features = make_layers(cfg)
         self.classifier = nn.Sequential(
-            nn.Linear(1024 * opt.S * opt.S, 4096),
+            nn.Linear(256 * opt.S * opt.S, 4096),
             nn.LeakyReLU(0.1),
             nn.Linear(4096, opt.S * opt.S * (opt.B * 5 + opt.C)))
 

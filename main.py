@@ -15,7 +15,7 @@ if __name__ == "__main__":
     parser.add_argument('--B', default=2, help='Bounding_boxes')
     parser.add_argument('--img_width', default=448, help='Width of the image')
     parser.add_argument('--img_height', default=448, help='Height of the image')
-    parser.add_argument('--batchSize', type=int, default=1, help='input batch size')
+    parser.add_argument('--batchSize', type=int, default=10, help='input batch size')
     parser.add_argument('--niter', type=int, default=50, help='number of epochs to train for')
     parser.add_argument('--lr', type=float, default=0.00001)
     parser.add_argument('--cuda', default='cuda', help='enables cuda')
@@ -32,14 +32,18 @@ if __name__ == "__main__":
     model.to(device)
 
     step=0
-    running_loss = 0
+
     for epochs in range(50):
+        running_loss = 0
         for i_batch, (image_batch, label_batch, img_name_batch) in enumerate(train_loader):
             step = step + 1
             image_batch = image_batch.to(device)
             label_batch =  label_batch.to(device)
             loss = model.forward(image_batch, label_batch)
             running_loss += loss * image_batch.size(0)
+            if (step + 1) % opt.print_freq_iter == 0:
+                print('Epoch: {}, Iter: {}, Steps: {}, Loss:{}'.format(epochs, i_batch, step, loss))
+
 
 
 

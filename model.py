@@ -1,7 +1,6 @@
 from network import *
 from loss import *
 import torch.nn as nn
-import torchvision
 import torch
 
 
